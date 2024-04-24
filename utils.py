@@ -1,5 +1,32 @@
+import time
+import sys
+
+from loguru import logger
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+
+DEBUG = True
+
+
+def setup_logger():
+    # Define log level based on debug mode
+    logger.remove()
+    if DEBUG:
+        logger.add(sys.stderr, level="DEBUG")
+    else:
+        logger.add(sys.stderr, level="INFO")
+
+
+def print_welcome():
+    print(
+        "\033[1mWelcome to the UMich lecture scraper!\n"
+        "This program will scrape the video links from a CoE Lecture recordings page\n"
+        "and save them to a csv file\n"
+        "(process takes ~10-20 minutes depending on number of classes and internet speed).\n"
+        "You will need to enter your UMich login credentials and DUO 2FA.\n"
+        "This program will never save your password.\n"
+        "Please enter your credentials below.\n\033[0m"
+    )
 
 
 def save_list_to_csv(list_of_values, csv_file_path):
@@ -47,11 +74,26 @@ def due_2fa_push(driver, wait):
     """
     gets the push notification from DUO 2FA to your phone
     """
-    wait.until(EC.presence_of_element_located((By.ID, "duo_iframe")))
-    # Click the "Send Me a Push" button
-    driver.switch_to.frame("duo_iframe")
-    wait.until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "button.auth-button.positive"))
-    )
-    auth_button = driver.find_element(By.CSS_SELECTOR, "button.auth-button.positive")
-    auth_button.click()
+    wait.until(EC.presence_of_element_located((By.ID, "auth-view-wrapper")))
+    logger.critical("Requesting DUO push auth, CHECK YOUR PHONE!")
+    # case where they ask if this is a public computer
+    # check if button id="trust-browser-button" exists
+    # check for up to 10 seconds
+    time.sleep(8)
+    pressed_btn = False
+    for _ in range(10):
+        try:
+            trust_button = driver.find_element(By.ID, "trust-browser-button")
+            trust_button.click()
+            pressed_btn = True
+            break
+        except Exception as e:
+            logger.warning("trust button not found... trying again")
+        time.sleep(2)
+
+    if not pressed_btn:
+        logger.error(
+            "Was unable to find the DUO trust browser button, please file an issue on github",
+            "or possible try to approve the duo notification on your phone faster.",
+        )
+        exit(1)
