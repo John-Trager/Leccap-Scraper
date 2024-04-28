@@ -41,7 +41,7 @@ def save_list_to_csv(list_of_values, csv_file_path):
     import csv
 
     # Open the CSV file for writing.
-    with open(csv_file_path, "w", newline="") as csvfile:
+    with open(csv_file_path, "a+", newline="") as csvfile:
         # Create a CSV writer object.
         writer = csv.writer(csvfile)
 
@@ -70,9 +70,11 @@ def login_sso_umich(driver, username: str, password: str):
     login_button.click()
 
 
-def due_2fa_push(driver, wait):
+def due_2fa_push(driver, wait) -> bool:
     """
-    gets the push notification from DUO 2FA to your phone
+    gets the push notification from DUO 2FA to your phone.
+
+    Returns if successfully pressed the DUO button or not
     """
     wait.until(EC.presence_of_element_located((By.ID, "auth-view-wrapper")))
     logger.critical("Requesting DUO push auth, CHECK YOUR PHONE!")
@@ -96,4 +98,5 @@ def due_2fa_push(driver, wait):
             "Was unable to find the DUO trust browser button, please file an issue on github",
             "or possible try to approve the duo notification on your phone faster.",
         )
-        exit(1)
+
+    return pressed_btn
