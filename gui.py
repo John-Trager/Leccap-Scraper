@@ -13,7 +13,7 @@ from PyQt6.QtGui import QTextCursor
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 import time
 import sys
-
+import io
 from scraper import Scraper
 
 
@@ -246,6 +246,12 @@ class MainWindow(QWidget):
 
 
 if __name__ == "__main__":
+    # fix -noconsole issue with pyinstaller
+    if sys.stderr is None:
+        stream = io.StringIO()
+        sys.stdout = stream
+        sys.stderr = stream
+
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()

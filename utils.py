@@ -14,7 +14,7 @@ def setup_logger():
     if DEBUG:
         logger.add(sys.stderr, level="DEBUG")
     else:
-        logger.add(sys.stderr, level="INFO")
+        logger.add(sys.stderr, level="CRITICAL")
 
 
 def print_welcome():
@@ -100,7 +100,7 @@ def due_2fa_push(driver, wait) -> bool:
     Returns if successfully pressed the DUO button or not
     """
     wait.until(EC.presence_of_element_located((By.ID, "auth-view-wrapper")))
-    logger.critical("Requesting DUO push auth, CHECK YOUR PHONE!")
+    logger.debug("Requesting DUO push auth, CHECK YOUR PHONE!")
     # case where they ask if this is a public computer
     # check if button id="trust-browser-button" exists
     # check for up to 10 seconds
