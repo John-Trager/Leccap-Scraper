@@ -52,7 +52,9 @@ def save_list_to_csv(list_of_values, csv_file_path):
 
 def login_sso_umich(driver, username: str, password: str):
     """
-    logins into umich account using single sign on
+    logins into umich account using single sign on.
+
+    Returns if successfully logged in or not
     """
     # Find the username and password input fields and the login button
     username_field = driver.find_element(By.ID, "username")
@@ -68,6 +70,27 @@ def login_sso_umich(driver, username: str, password: str):
 
     # Click the login button
     login_button.click()
+
+    # TODO: may need to sleep here
+
+    # Check if login failed
+    # see if word "incorrect" is on page anywhere
+    try:
+        res = driver.find_element(
+            By.XPATH, "//*[contains(text(), 'incorrect')]"
+        )
+        if res:
+            logger.error(
+                "Failed to login to UMich account, please check your username and password."
+            )
+
+            return False
+    except Exception as _:
+        logger.debug(
+            "Did not find word 'incorrect' on page - login must have succeeded"
+        )
+
+    return True
 
 
 def due_2fa_push(driver, wait) -> bool:

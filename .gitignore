@@ -5,9 +5,13 @@ misc/*
 .vscode/*
 data/*
 env/*
+dist/*
+build/*
 # avoided files
 parse_links.py
 # avoided file types
 *.csv
 *.mp4
 *.mov
+*.spec
+*.icns

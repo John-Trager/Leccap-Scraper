@@ -61,9 +61,16 @@ class Scraper(QThread):
         wait = WebDriverWait(driver, 60)
         time.sleep(2)
 
-        self.gui_print("Logging in to UMich account though single sign on...")
-        login_sso_umich(driver, self.username, self.password)
-        logger.debug("Logging in to UMich account though single sign on...")
+        self.gui_print("Logging in to UMich account.")
+        logger.debug("Logging in to UMich account.")
+        login_res = login_sso_umich(driver, self.username, self.password)
+
+        if not login_res:
+            self.gui_print("ERROR: Failed to login to UMich account.")
+            self.gui_print("Please check your username and password.")
+            driver.quit()
+            self.finished.emit()
+            return
 
         self.gui_print(
             "IMPORTANT: Check your phone for the DUO push!\n"

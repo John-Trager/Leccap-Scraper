@@ -49,3 +49,19 @@ Where the csv file contains the links to the videos that were extracted using th
 This project is for educational purposes only.
 
 At no point is this software or any of its creators liable for how the software is used. This includes using the tool to scrape and download lectures (the university has copyright over all lecture materials - and this tool in no way should be used to re-distribute such materials).
+
+## Note to Developers
+
+Find stable releases of the latest chromedriver here: [link](https://googlechromelabs.github.io/chrome-for-testing/#stable)
+
+- using selenium version 4.6 and above we should not have to worry about drivers since they should automatically be downloaded
+
+### Building Executables
+
+To build the executable we use pyinstaller:
+
+```
+pyinstaller --name Lecap\ Scraper --icon=icon.icns --noconfirm --noconsole --onefile gui.py
+```
+
+Unfortunately pyinstaller does not support cross-compilation so we will need to build the project on each target OS we want to make a release for.

@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import (
     QLabel,
     QLineEdit,
     QTextEdit,
+    QDialog,
 )
 from PyQt6.QtGui import QTextCursor
 
@@ -34,12 +35,59 @@ class Worker(QThread):
         self.finished.emit()
 
 
+class WelcomeDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Lecture Scraper Info")
+        self.setStyleSheet(
+            """
+            background-color: #f0f0f0;
+            color: #333333;
+            font-family: Arial;
+            font-size: 14px;
+        """
+        )
+
+        layout = QVBoxLayout()
+
+        label = QLabel("Welcome to the UMich lecture scraper!")
+        layout.addWidget(label)
+
+        # Add a QTextEdit for program description
+        program_description = QTextEdit()
+        program_description.setReadOnly(True)
+        program_description.setLineWrapMode(
+            QTextEdit.LineWrapMode.WidgetWidth
+        )
+        program_description.setStyleSheet(
+            """
+            background-color: #f0f0f0;
+            color: #333333;
+            font-family: Arial;
+            font-size: 14px;
+            """
+        )
+        program_description.setText(
+            "This program allows you to scrape lecture information from classes you took at UMich. "
+            + "Please enter your UMich unique name and password to get started. "
+            + "The program will require you to authenticate with Duo 2FA push."
+            + "Please make sure you have your phone ready.\n\n"
+            + "The program will scrape the lecture video links and save them to a csv file that "
+            + "can later be used to download or access. The video links can be accessed directly to play the lectures "
+            + "without the need for logging into your UMich account!"
+        )
+        layout.addWidget(program_description)
+        layout.setAlignment(program_description, Qt.AlignmentFlag.AlignCenter)
+
+        self.setLayout(layout)
+
+
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle("Lecture Scraper")
-        self.resize(300, 200)
+        self.resize(400, 300)
 
         self.initUI()
 
@@ -55,10 +103,16 @@ class MainWindow(QWidget):
 
         self.layout = QVBoxLayout()
 
+        # Create welcome label
+        welcome_label = QLabel("Welcome to the UMich lecture scraper!")
+        welcome_label.setStyleSheet("font-size: 18px; font-weight: bold;")
+        self.layout.addWidget(welcome_label)
+        self.layout.setAlignment(welcome_label, Qt.AlignmentFlag.AlignCenter)
+
         # Username layout
         username_label = QLabel("Unique name:")
         self.username_entry = QLineEdit()
-        self.username_entry.setFixedWidth(300)
+        self.username_entry.setFixedWidth(150)
         self.username_entry.setStyleSheet(
             """
             background-color: #FFFFFF;
@@ -68,11 +122,15 @@ class MainWindow(QWidget):
         )
         self.layout.addWidget(username_label)
         self.layout.addWidget(self.username_entry)
+        self.layout.setAlignment(
+            self.username_entry, Qt.AlignmentFlag.AlignCenter
+        )
+        self.layout.setAlignment(username_label, Qt.AlignmentFlag.AlignCenter)
 
         # Password layout
         password_label = QLabel("Password:")
         self.password_entry = QLineEdit()
-        self.password_entry.setFixedWidth(300)
+        self.password_entry.setFixedWidth(150)
         self.password_entry.setEchoMode(QLineEdit.EchoMode.Password)
         self.password_entry.setStyleSheet(
             """
@@ -83,6 +141,10 @@ class MainWindow(QWidget):
         )
         self.layout.addWidget(password_label)
         self.layout.addWidget(self.password_entry)
+        self.layout.setAlignment(
+            self.password_entry, Qt.AlignmentFlag.AlignCenter
+        )
+        self.layout.setAlignment(password_label, Qt.AlignmentFlag.AlignCenter)
 
         # Start button
         self.button = QPushButton("Start")
@@ -100,6 +162,11 @@ class MainWindow(QWidget):
         self.button.clicked.connect(self.start)
         self.layout.addWidget(self.button)
         self.layout.setAlignment(self.button, Qt.AlignmentFlag.AlignCenter)
+
+        # add label for the program
+        terminal_label = QLabel("Program Status:")
+        terminal_label.setStyleSheet("font-size: 15px; font-weight: bold;")
+        self.layout.addWidget(terminal_label)
 
         # add terminal like window to show progress of the scraper
         self.terminal_box = QTextEdit()
@@ -121,7 +188,6 @@ class MainWindow(QWidget):
     def start(self):
         username = self.username_entry.text()
         password = self.password_entry.text()
-        # print(f"Username: {username}, Password: {password}")
 
         self.disabled_form()
 
@@ -183,4 +249,8 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
+
+    welcome_dialog = WelcomeDialog()
+    welcome_dialog.exec()
+
     sys.exit(app.exec())
