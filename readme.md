@@ -2,7 +2,15 @@
 
 This tool allows for a student to download the lecture recordings for classes they have taken at the university.
 
-## Usage
+# Usage
+
+## Running from Executable (preferred)
+
+If you are using a Windows x86, Mac with apple silicon (M1,...), or linux x86 machine checkout the [release page](https://github.com/John-Trager/Leccap-Scraper/releases) to download one of the executables to run the lecture scraper!
+
+If you instead want to run the code on your own or build of this project feel free to run the code from its source, and following the instructions below.
+
+## Building and Running from Source
 
 ### Software Requirements
 
@@ -70,6 +78,7 @@ Unfortunately pyinstaller does not support cross-compilation so we will need to 
 
 > [!NOTE]
 > To use the lecture scraper gui on linux you may need to install:
+>
 > ```
 > sudo apt install libxcb-cursor0
 > ```
