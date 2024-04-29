@@ -61,7 +61,15 @@ Find stable releases of the latest chromedriver here: [link](https://googlechrom
 To build the executable we use pyinstaller:
 
 ```
-pyinstaller --name Lecap\ Scraper --icon=icon.icns --noconfirm --noconsole --onefile gui.py
+pyinstaller --name Lecap\ Scraper --icon=media/icon.icns --noconfirm --noconsole --onefile gui.py
 ```
 
+On windows we need to use the `.ico` instead of the `.icns` app icon.
+
 Unfortunately pyinstaller does not support cross-compilation so we will need to build the project on each target OS we want to make a release for.
+
+> [!NOTE]
+> To use the lecture scraper gui on linux you may need to install:
+> ```
+> sudo apt install libxcb-cursor0
+> ```
