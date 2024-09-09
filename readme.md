@@ -4,7 +4,9 @@ This tool allows for a student to download the lecture recordings for classes th
 
 # Usage
 
-## Running from Executable (preferred)
+## Running from Executable
+> [!NOTE]
+> There has been some issues getting this to work on apple computers, in which case you can just build from source!
 
 If you are using a Windows x86, Mac with apple silicon (M1,...), or linux x86 machine checkout the [release page](https://github.com/John-Trager/Leccap-Scraper/releases) to download one of the executables to run the lecture scraper!
 
